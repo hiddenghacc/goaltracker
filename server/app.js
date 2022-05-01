@@ -1,20 +1,15 @@
 const express = require("express")
-const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerUI = require("swagger-ui-express")
 const app = express()
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    info: {
-      title: "Goal tracker",
-      version: "1.0.0"
-    }
-  },
-  apis: ["app.js"]
-}
+const swaggerDocs = require("./config/swagger")
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+
+// requiring models so I can use sync
+const models = require("./models")
+
+app.use(express.json())
 
 /**
  * @swagger
@@ -29,6 +24,12 @@ app.get("/elvise", (_, res) => {
   res.send("Ziv sam").status(200)
 })
 
+// require routes
+const { goalRouter } = require("./routes")
+app.use("/goals", goalRouter)
+
 const PORT = process.env.PORT || 5000
+// TODO: set up cors
+const CORS = process.env.CORS || "*"
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
