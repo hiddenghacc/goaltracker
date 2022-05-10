@@ -5,7 +5,7 @@ const goalRouter = express.Router()
 // middleware that is specific to this router
 if (process.env.NODE_ENV === "development") {
   goalRouter.use((req, res, next) => {
-    console.log("Goal router")
+    console.log("Finished router")
     console.log("Time: ", Date.now())
     next()
   })

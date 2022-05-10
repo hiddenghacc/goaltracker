@@ -3,7 +3,7 @@ const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
-      title: "Goal tracker",
+      title: "Finished tracker",
       version: "1.0.0"
     }
   },

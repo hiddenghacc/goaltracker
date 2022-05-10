@@ -6,7 +6,7 @@ const Finished = sequelize.define(
   "Finished",
   {
     date: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATEONLY,
       allowNull: false
     },
     note: {

@@ -6,6 +6,11 @@ const swaggerDocs = require("./config/swagger")
 
 app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+// cors
+const cors = require("cors")
+const CORSenv = process.env.CORS || "*"
+app.use(cors())
+
 // requiring models so I can use sync
 const models = require("./models")
 
@@ -27,6 +32,8 @@ app.get("/elvise", (_, res) => {
 // require routes
 const { goalRouter } = require("./routes")
 app.use("/goals", goalRouter)
+const { finishedRouter } = require("./routes")
+app.use("/finished", finishedRouter)
 
 const PORT = process.env.PORT || 5000
 // TODO: set up cors

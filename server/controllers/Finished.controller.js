@@ -1,8 +1,17 @@
 const { Finished } = require("../models")
 
-const getAll = async (_, res) => {
+const getAll = async (req, res) => {
   try {
-    const finisheds = await Finished.findAll()
+    const { date } = req.query
+    let dateWhere = {}
+    if (date) {
+      dateWhere.date = new Date(date).toDateString()
+    }
+    const finisheds = await Finished.findAll({
+      where: {
+        ...dateWhere
+      }
+    })
     res.status(200).json(finisheds)
   } catch (err) {
     console.error(err)
