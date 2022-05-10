@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from "react"
+import React, {useEffect, useState} from "react"
 import goalsApi from "../../services/goalsApi"
+
+import FinishGoal from "./FinishGoal"
+
+import finishedApi from "../../services/finishedApi"
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
+import {StaticDatePicker} from "@mui/x-date-pickers/StaticDatePicker"
+import {Button, TextField, Typography} from "@mui/material"
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider"
+import {ToastContainer, toast} from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css'
 
 const FinishAllGoals = (props) => {
   const [goals, setGoals] = useState([])
   const [date, setDate] = useState(new Date())
   const [finisheds, setFinisheds] = useState([])
 
-  useEffect(() => {
-    ;(async () => {
-      const { data: newGoals } = await goalsApi.get()
+  const mapGoalsToFinishedAndSetState = () => {
+    (async () => {
+      const {data: newGoals} = await goalsApi.get()
       setGoals(newGoals)
-      const { data: newFinished } = await finishedApi.get(date)
+      const {data: newFinished} = await finishedApi.get(date)
       const finishedsMapped = newGoals.map((goal) => {
         if (newFinished.some((finished) => finished.goalId === goal.id)) {
           return {
@@ -18,21 +28,29 @@ const FinishAllGoals = (props) => {
             checked: true
           }
         }
-        return { goalId: goal.id, date: new Date(), checked: false }
+        return {goalId: goal.id, date: date, checked: false}
       })
       setFinisheds(finishedsMapped)
     })()
+  }
+
+  useEffect(() => {
+    mapGoalsToFinishedAndSetState()
   }, [date])
 
   useEffect(() => {
-    console.log("finisheds changed: ", { finisheds })
+    console.log("finisheds changed: ", {finisheds})
   }, [finisheds])
+
+  useEffect(() => {
+    console.log("date changed: ", {date})
+  }, [date])
 
   const toggleChecked = (goalId) => {
     setFinisheds((oldFinisheds) => {
       return oldFinisheds.map((finished) => {
         if (finished.goalId === goalId) {
-          return { ...finished, checked: !finished.checked }
+          return {...finished, checked: !finished.checked}
         }
         return finished
       })
@@ -49,26 +67,46 @@ const FinishAllGoals = (props) => {
           } else {
             finishedApi.update(
               newFinished.id,
-              newFinished.date,
+              date,
               newFinished.note,
               newFinished.goalId
             )
           }
         } else if (newFinished.checked) {
           finishedApi.post(
-            newFinished.date,
+            date,
             newFinished.note,
             newFinished.goalId
           )
         }
+        mapGoalsToFinishedAndSetState()
+        toast.success("Saved finished! :)", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
       } catch (e) {
-        console.log(e)
+        toast.error("Error while saving finished! :(", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+        console.error(e)
       }
     })
   }
 
   return (
     <>
+      <Typography variant="h5">Record finished goals</Typography>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <StaticDatePicker
           onChange={(date) => setDate(new Date(date))}
@@ -93,15 +131,9 @@ const FinishAllGoals = (props) => {
           Save all
         </Button>
       </LocalizationProvider>
+      <ToastContainer/>
     </>
   )
 }
-import FinishGoal from "./FinishGoal"
-
-import finishedApi from "../../services/finishedApi"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker"
-import { Button, TextField } from "@mui/material"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 
 export default FinishAllGoals

@@ -5,7 +5,7 @@ const Finished = require("./Finished")
 // force: true if you want to remigrate tables
 ;(async function () {
   await sequelize.sync({
-    force: true
+    // force: true
   })
 })()
 

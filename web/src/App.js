@@ -13,7 +13,7 @@ function App() {
           <Route path="goals" element={<Goals />} />
           <Route path="finished" element={<Finisheds />} />
           <Route path="all" element={<FinishAllGoals />} />
-          <Route path="*" element={<></>} />
+          <Route path="*" element={<>Yellow</>} />
         </Route>
       </Routes>
     </BrowserRouter>

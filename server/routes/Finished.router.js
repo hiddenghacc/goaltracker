@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
 
 /**
  * @swagger
- * /finisheds:
+ * /finished:
  *    get:
  *      description: gets all finisheds
  *      responses:
@@ -26,7 +26,7 @@ finishedRouter.get("/", FinishedController.getAll)
 
 /**
  * @swagger
- * /finisheds:
+ * /finished:
  *    get:
  *      description: gets finished by pk
  *      responses:
@@ -39,7 +39,7 @@ finishedRouter.get("/:id", FinishedController.getOne)
 
 /**
  * @swagger
- * /finisheds:
+ * /finished:
  *    post:
  *      description: creates a finished, idk
  *      responses:
@@ -52,21 +52,30 @@ finishedRouter.post("/", FinishedController.createOne)
 
 /**
  * @swagger
- * /finisheds:
+ * /finished/{id}:
  *    delete:
- *      description: deletes by pk
+ *      parameters:
+ *         - name: id
+ *           in: path
+ *           required: true
+ *           type: number
  *      responses:
  *        200:
- *          description: if ok then deleted
+ *          description: deleted successfully, returns number of rows affected (0 for not found, 1 for deleted)
  *        400:
- *          description: something went wrong
+ *          description: bad request
  */
 finishedRouter.delete("/:id", FinishedController.deleteOne)
 
 /**
  * @swagger
- * /finisheds:
+ * /finished/{id}:
  *    put:
+ *      parameters:
+ *         - name: id
+ *           in: path
+ *           required: true
+ *           type: number
  *      description: updates a finished
  *      responses:
  *        200:

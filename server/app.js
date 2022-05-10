@@ -2,9 +2,16 @@ const express = require("express")
 const swaggerUI = require("swagger-ui-express")
 const app = express()
 
-const swaggerDocs = require("./config/swagger")
+// use envirnoment variables
+require("dotenv").config()
 
-app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+console.log(process.env.NODE_ENV)
+// console.log(dotenv)
+
+if (process.env.NODE_ENV === "development") {
+  const swaggerDocs = require("./config/swagger")
+  app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+}
 
 // cors
 const cors = require("cors")
